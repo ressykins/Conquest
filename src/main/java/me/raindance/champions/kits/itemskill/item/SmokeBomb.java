@@ -39,7 +39,7 @@ public class SmokeBomb implements IItem, Listener {
 
     private void bomb(KitPlayer user, Item item, LivingEntity intercepted, Location land) {
         World world = item.getWorld();
-        world.playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
+        // world.playEffect(item.getLocation(), Effect.EXPLOSION_HUGE, 1);
         world.playSound(item.getLocation(), Sound.FIZZ, 2f, 0.5f);
         List<LivingEntity> entities = world.getLivingEntities();
         for(LivingEntity entity : entities) {

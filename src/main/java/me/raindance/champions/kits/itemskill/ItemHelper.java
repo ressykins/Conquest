@@ -98,6 +98,8 @@ public class ItemHelper extends ListenerBase {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void click(PlayerInteractEvent e) {
+        // if (e.getItem().getType() != Material.FISHING_ROD) return;
+        
         if(e.getItem() == null) return;
         ItemActionData itemHandler = getItemAction(e.getItem());
         if (itemHandler == null) return;

@@ -23,8 +23,8 @@ import static com.podcrash.api.world.BlockUtil.*;
 
 @SkillMetadata(id = 703, skillType = SkillType.Thief, invType = InvType.AXE)
 public class Blink extends Instant implements ICooldown {
-    private final double distance = 20;
-    private final int deblinkThreshold = 2; // in seconds
+    private final double distance = 24;
+    private final int deblinkThreshold = 4; // in seconds
     private Location prevLocation;
 
     public Blink() {
@@ -33,7 +33,7 @@ public class Blink extends Instant implements ICooldown {
 
     @Override
     public float getCooldown() {
-        return 10;
+        return 8;
     }
 
     @Override
@@ -50,8 +50,16 @@ public class Blink extends Instant implements ICooldown {
         if (!(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) return;
         Player player = getPlayer();
         if (!this.onCooldown()) {
-            if(StatusApplier.getOrNew(getPlayer()).has(Status.SLOW)) {
+            if (StatusApplier.getOrNew(getPlayer()).has(Status.SLOW)) {
                 getPlayer().sendMessage(getCannotUseWhileMessage("Slowed"));
+                return;
+            }
+            if (StatusApplier.getOrNew(getPlayer()).has(Status.GROUND)) {
+                getPlayer().sendMessage(getCannotUseWhileMessage("Grounded"));
+                return;
+            }
+            if (StatusApplier.getOrNew(getPlayer()).has(Status.ROOTED)) {
+                getPlayer().sendMessage(getCannotUseWhileMessage("Rooted"));
                 return;
             }
             player.setFallDistance(0);

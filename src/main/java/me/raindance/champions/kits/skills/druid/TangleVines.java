@@ -48,9 +48,9 @@ public class TangleVines extends Instant implements TimeResource, IEnergy, ICool
     private List<Player> players;
 
     private int radius = 4;
-    private double damage = 10;
+    private double damage = 8;
     private double speedFactor = 0.35;
-    private float rootDuration = 2.5F;
+    private float rootDuration = 2.0F;
 
 
     @Override
@@ -190,7 +190,7 @@ public class TangleVines extends Instant implements TimeResource, IEnergy, ICool
 
     @Override
     public float getCooldown() {
-        return 7;
+        return 6;
     }
 
     @Override

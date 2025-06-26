@@ -8,6 +8,9 @@ import me.raindance.champions.Main;
 import com.podcrash.api.effect.particle.ParticleGenerator;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
+
+import com.podcrash.api.kits.KitPlayer;
+import com.podcrash.api.kits.KitPlayerManager;
 import com.podcrash.api.kits.enums.ItemType;
 import me.raindance.champions.kits.SkillType;
 import com.podcrash.api.kits.skilltypes.Passive;
@@ -24,7 +27,7 @@ import org.bukkit.potion.PotionEffectType;
 @SkillMetadata(id = 103, skillType = SkillType.Berserker, invType = InvType.PRIMARY_PASSIVE)
 public class Bloodlust extends Passive {
     private int duration;
-    private double healAmount = 4;
+    // private double healAmount = 4;
 
     private PotionEffect strength, speed;
     private Bloodlust instance;
@@ -34,7 +37,7 @@ public class Bloodlust extends Passive {
     public Bloodlust() {
         super();
         this.instance = this;
-        this.duration = 7;
+        this.duration = 8;
         this.strength = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration * 20, 0);
     }
 
@@ -77,7 +80,14 @@ public class Bloodlust extends Passive {
             int speedLevel = potencySpeed + 1;
             if (speedLevel > 2) speedLevel = 2;
             this.speed = new PotionEffect(PotionEffectType.SPEED, duration * 20, speedLevel);
-            getChampionsPlayer().heal(healAmount);
+
+            KitPlayer berserker = KitPlayerManager.getInstance().getKitPlayer(getPlayer());
+            // Find the current percentage of health remaining, then multiply it by our real max HP value (e.g. 40 for zerk right now)
+            double trueCurrentHP = (getPlayer().getHealth() / getPlayer().getMaxHealth()) * berserker.getHP();
+            double trueMissingHP = berserker.getHP() - trueCurrentHP;
+            double heal = trueMissingHP * 0.15;
+
+            getChampionsPlayer().heal(heal);
             Bukkit.getScheduler().runTaskLater(Main.instance, () -> {
                 boolean a = getPlayer().addPotionEffect(strength, true);
                 boolean b = getPlayer().addPotionEffect(speed, true);

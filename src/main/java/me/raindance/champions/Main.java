@@ -145,6 +145,10 @@ public class Main extends JavaPlugin implements IGamePlugin {
             }
         }
 
+        //Communicator.putLobbyMap("maxsize", GameManager.getGame().getMaxPlayers());
+        //executor.shutdown();
+
+
         PodcrashSpigot.debugLog("ENDTIME: " + (System.currentTimeMillis() - startTime));
     }
 

@@ -37,11 +37,19 @@ public class RopedArrow extends BowShotSkill {
     protected void shotEntity(DamageApplyEvent event, Player shooter, LivingEntity victim, Arrow arrow, float force) {
         //getPlayer().sendMessage(String.format("You shot %s", victim.getName()));
         //boost(victim.getLocation(), force, arrow.getVelocity());
-        event.setVelocityModifierX(-1.5d);
-        event.setVelocityModifierZ(-1.5d);
+        // event.setVelocityModifierX(-1.5d);
+        // event.setVelocityModifierZ(-1.5d);
 
-        Vector curVelocity = victim.getVelocity();
-        victim.setVelocity(curVelocity.setY(0.5));
+        // Vector curVelocity = victim.getVelocity();
+        // victim.setVelocity(curVelocity.setY(0.5));
+        Vector direction = shooter.getLocation().toVector().subtract(victim.getLocation().toVector()).normalize();
+
+        // Adjust the strength of the reversed knockback; you can change this multiplier as desired
+        double knockbackStrength = 2.5; 
+    
+        // Set the reversed velocity with a slight upward push
+        Vector knockbackVelocity = direction.multiply(knockbackStrength).setY(0.5);
+        victim.setVelocity(knockbackVelocity);
     }
 
     @Override
@@ -51,6 +59,7 @@ public class RopedArrow extends BowShotSkill {
 
     private void boost(Location endpoint, float force, Vector arrowvelocity) {
         getPlayer().sendMessage(getUsedMessage());
+        if (getPlayer().isSneaking()) return;
         Location playerLoc = getPlayer().getLocation();
         force = (3 * force + 1f) / 4f;
         Vector vector = endpoint.toVector().subtract(playerLoc.toVector()).normalize().multiply(force);
@@ -62,6 +71,6 @@ public class RopedArrow extends BowShotSkill {
         double yMax = 0.5d + 0.52d * multiplier;
         if (vector.getY() > yMax) vector.setY(yMax);
         getPlayer().setVelocity(vector.multiply(0.3d + 1.2 * multiplier));
-        getPlayer().setFallDistance(-1.5f);
+        getPlayer().setFallDistance(-4f);
     }
 }

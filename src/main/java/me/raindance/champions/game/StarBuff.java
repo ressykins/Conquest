@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Helper module to handle buffed players
  */
-public class StarBuff implements TimeResource {
+public class  StarBuff implements TimeResource {
     public static final String PREFIX = ChatColor.WHITE + "" + ChatColor.BOLD + "STAR:" + ChatColor.RESET + " ";
     private Game game;
     private GameScoreboard scoreboard;

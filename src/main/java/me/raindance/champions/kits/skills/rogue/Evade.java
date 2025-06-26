@@ -1,9 +1,14 @@
 package me.raindance.champions.kits.skills.rogue;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.packetwrapper.abstractpackets.WrapperPlayServerWorldParticles;
 import com.podcrash.api.damage.Cause;
+import com.podcrash.api.effect.particle.ParticleGenerator;
 import com.podcrash.api.effect.status.Status;
 import com.podcrash.api.effect.status.StatusApplier;
 import com.podcrash.api.events.DamageApplyEvent;
+import com.podcrash.api.events.DeathApplyEvent;
+
 import me.raindance.champions.Main;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
@@ -16,6 +21,7 @@ import com.podcrash.api.sound.SoundPlayer;
 import com.podcrash.api.time.TimeHandler;
 import com.podcrash.api.time.resources.TimeResource;
 import com.podcrash.api.util.MathUtil;
+import com.podcrash.api.util.PacketUtil;
 import com.podcrash.api.util.TitleSender;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -30,7 +36,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.util.Vector;
 
 @SkillMetadata(id = 604, skillType = SkillType.Rogue, invType = InvType.SWORD)
-public class Evade extends Instant implements TimeResource, ICharge, IPassiveTimer {
+public class Evade extends Instant implements ICharge, IPassiveTimer {
     private boolean isEvading = false;
     private long time;
     private int charges = 2;
@@ -87,6 +93,14 @@ public class Evade extends Instant implements TimeResource, ICharge, IPassiveTim
         if (!rightClickCheck(action)) return;
         if (StatusApplier.getOrNew(event.getPlayer()).has(Status.SLOW)) {
             event.getPlayer().sendMessage(getCannotUseWhileMessage("Slowed"));
+            return;
+        }
+        if (StatusApplier.getOrNew(event.getPlayer()).has(Status.GROUND)) {
+            event.getPlayer().sendMessage(getCannotUseWhileMessage("Grounded"));
+            return;
+        }
+        if (StatusApplier.getOrNew(event.getPlayer()).has(Status.ROOTED)) {
+            event.getPlayer().sendMessage(getCannotUseWhileMessage("Rooted"));
             return;
         }
         //if in roughly quarter of a second you right click again, then don't start it (which shouldn't be humanly possible)
@@ -243,6 +257,12 @@ public class Evade extends Instant implements TimeResource, ICharge, IPassiveTim
         public void cleanup() {
             if(isEvading)
             getPlayer().sendMessage(getFailedMessage());
+
+
+            WrapperPlayServerWorldParticles packet = ParticleGenerator.createParticle(EnumWrappers.Particle.VILLAGER_ANGRY, 4);
+            packet.setLocation(getPlayer().getEyeLocation());
+            PacketUtil.asyncSend(packet, getPlayers());
+            
             SoundPlayer.sendSound(getPlayer(),"note.pling", 0.75F, 2);
             setLastUsed(System.currentTimeMillis());
             TitleSender.sendTitle(getPlayer(), TitleSender.emptyTitle());
@@ -259,5 +279,11 @@ public class Evade extends Instant implements TimeResource, ICharge, IPassiveTim
     @Override
     public ItemType getItemType() {
         return ItemType.SWORD;
+    }
+
+    @EventHandler
+    public void kill(DeathApplyEvent event) {
+        if(event.getAttacker() != getPlayer()) return;
+        addCharge();
     }
 }

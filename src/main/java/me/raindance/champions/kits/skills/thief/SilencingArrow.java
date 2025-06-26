@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
 
 @SkillMetadata(id = 709, skillType = SkillType.Thief, invType = InvType.BOW)
 public class SilencingArrow extends BowShotSkill {
-    private final int duration = 4;
+    private final int duration = 3;
 
     @Override
     public float getCooldown() {
-        return 7;
+        return 8;
     }
 
     @Override

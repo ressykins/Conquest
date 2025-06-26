@@ -27,7 +27,7 @@ public class Footwork extends Passive {
     @EventHandler
     public void bowHit(DamageApplyEvent event) {
         if(event.getAttacker() != getPlayer() || event.getCause() != Cause.PROJECTILE || isAlly(event.getVictim())) return;
-        StatusApplier.getOrNew(getPlayer()).applyStatus(Status.SPEED, 3, 1, true, true);
+        StatusApplier.getOrNew(getPlayer()).applyStatus(Status.SPEED, 3, 0, true, false);
     }
 
     @EventHandler

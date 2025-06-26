@@ -28,17 +28,17 @@ import org.bukkit.util.Vector;
 
 @SkillMetadata(id = 201, skillType = SkillType.Druid, invType = InvType.AXE)
 public class EarthWall extends Instant implements IEnergy, TimeResource, ICooldown {
-    private int energyUsage = 50;
+    private int energyUsage = 70;
     private final Vector up = new Vector(0, 1, 0);
     private float damage;
     public EarthWall() {
         super();
-        this.damage = 7F;
+        this.damage = 8F;
     }
 
     @Override
     public float getCooldown() {
-        return 8;
+        return 10;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class EarthWall extends Instant implements IEnergy, TimeResource, ICooldo
         for(Player player : getPlayers()) {
             if (player != getPlayer() && !isAlly(player) && player.getLocation().distanceSquared(ref) <= 1.3225D) {
                 DamageApplier.damage(player, getPlayer(), (i/7D) * damage, this, true);
-                StatusApplier.getOrNew(player).applyStatus(Status.SLOW, 3, 0);
+                StatusApplier.getOrNew(player).applyStatus(Status.SLOW, 3, 1);
             }
         }
         current.add(dir);

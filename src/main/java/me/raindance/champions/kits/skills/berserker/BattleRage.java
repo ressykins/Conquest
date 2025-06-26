@@ -1,31 +1,18 @@
 package me.raindance.champions.kits.skills.berserker;
 
-import com.podcrash.api.effect.particle.ParticleGenerator;
-import com.podcrash.api.sound.SoundPlayer;
-import com.podcrash.api.kits.EnergyBar;
+import com.podcrash.api.damage.Cause;
+import com.podcrash.api.effect.status.Status;
+import com.podcrash.api.effect.status.StatusApplier;
+import com.podcrash.api.events.DamageApplyEvent;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
 import com.podcrash.api.kits.enums.ItemType;
 import me.raindance.champions.kits.SkillType;
-import com.podcrash.api.kits.iskilltypes.action.ICooldown;
-import com.podcrash.api.kits.iskilltypes.action.IEnergy;
-import com.podcrash.api.kits.skilltypes.Drop;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import com.podcrash.api.kits.skilltypes.Passive;
+import org.bukkit.event.EventHandler;
 
-@SkillMetadata(id = 102, skillType = SkillType.Berserker, invType = InvType.DROP)
-public class BattleRage extends Drop implements ICooldown, IEnergy {
-    @Override
-    public int getEnergyUsage() {
-        return 0;
-    }
-
-    @Override
-    public float getCooldown() {
-        return 10;
-    }
-
+@SkillMetadata(id = 108, skillType = SkillType.Berserker, invType = InvType.SECONDARY_PASSIVE)
+public class BattleRage extends Passive {
     @Override
     public String getName() {
         return "Battle Rage";
@@ -36,17 +23,16 @@ public class BattleRage extends Drop implements ICooldown, IEnergy {
         return ItemType.NULL;
     }
 
-    @Override
-    public boolean drop(PlayerDropItemEvent e) {
-        if (e.getPlayer() != getPlayer() || onCooldown()) return false;
-        setLastUsed(System.currentTimeMillis());
-        EnergyBar energyBar = getChampionsPlayer().getEnergyBar();
-        getChampionsPlayer().heal(2 * energyBar.getEnergy());
-        energyBar.setEnergy(0);
 
-        Location loc = getPlayer().getLocation();
-        SoundPlayer.sendSound(loc, "mob.enderdragon.growl", 0.9F, 80);
-        ParticleGenerator.createBlockEffect(loc, Material.REDSTONE_BLOCK.getId());
-        return true;
+    @EventHandler
+    public void damage(DamageApplyEvent e) {
+        if(e.getAttacker() == getPlayer() && !isAlly(e.getVictim())) {
+            if(e.getCause() != Cause.MELEE) return;
+            
+            if (getChampionsPlayer().getEnergyBar().getEnergy() >= 4) {
+                StatusApplier.getOrNew(getPlayer()).applyStatus(Status.SPEED, 3, 0, true, false);
+                StatusApplier.getOrNew(getPlayer()).applyStatus(Status.RESISTANCE, 3, 0, true, false);
+            }
+        }
     }
 }

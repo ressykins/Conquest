@@ -20,73 +20,62 @@ public class ChampionsInventory {
         classItemList = new ItemStack[SkillType.details().length];
 
         addClass(SkillType.Warden, Material.IRON_HELMET,
-                "Wardens function as off-tanks, boasting",
-                "damage-soaking capabilities and crowd",
-                "control. While they lack mobility, they",
-                "make up for it with their considerable",
-                "skirmishing ability.");
+                "Wardens hold down the line with their",
+                "impenetrable bulk, ensuring the safety of their",
+                "allies and warding off any adversary that",
+                "dares to get within range.");
 
         addClass(SkillType.Duelist, Material.DIAMOND_SWORD,
-                "Duelists excel in fighting enemies one",
-                "by one and dealing consistent single-target",
-                "damage. They primarily rely on their melee",
-                "attacks to cut their opponents down.");
+                "Duelists excel in one-on-one duels,",
+                "utilizing their melee prowess and sustainability",
+                "to slay their opponents with ease.");
 
         addClass(SkillType.Vanguard, Material.DIAMOND_CHESTPLATE,
-                "Vanguards are resilient and powerful",
-                        "teamfighters. They sacrifice damage in",
-                        "exchange for strong crowd control",
-                        "abilities and high durability.");
+                "Vanguards lead the charge into battle,",
+                        "forcing their adversaries out of position and taking",
+                        "the brunt of enemy retaliation to pave the way",
+                        "for their allies to claim victory.");
         
         addClass(SkillType.Berserker, Material.DIAMOND_AXE, 
-                "Berserkers are mobile, close-range",
-                        "fighters capable of dealing with multiple",
-                        "enemies. Though somewhat frail, they can",
-                        "become a huge threat in teamfights if left",
-                        "unchecked.");
+                "Berserkers have an unquenchable thirst for",
+                        "battle, allowing them to stay alive in brawls for",
+                        "extended periods of time so long as they are shedding",
+                        "the blood of their enemies.");
 
         addClass(SkillType.Marksman, Material.BOW, 
-                "Marksmen rely on their precise, long-ranged",
-                        "attacks to support their team. They exclusively",
-                        "use their bow to deal heavy damage and",
-                        "cripple their targets.");
+                "Marksmen dispatch targets from afar with",
+                        "deadly precision, providing heavy sustained damage",
+                        "and support with their trusty bow and arrow.");
 
         addClass(SkillType.Hunter, Material.BONE,
-                "Hunters are nimble archers that shine in",
-                        "both short-range and mid-range engagements.",
-                        "They are able to use their bow to keep strong",
-                        "enemies at a distance and to secure kills on",
-                        "the weak.");
+                "Hunters are agile fighters that make use of their",
+                        "environment, patiently wearing their prey down at a safe",
+                        "distance before going in to secure the kill.");
 
         addClass(SkillType.Sorcerer, Material.BLAZE_ROD,
-                "Sorcerers depend on their abilities to",
-                        "dish out damage from a range. They are",
-                        "exceptional at whittling down their opponents",
-                        "over time and setting up potential kills with",
-                        "their spells.");
+                "Sorcerers primarily fight using their spells,",
+                        "whittling and locking down their foes with a",
+                        "wide arsenal of destructive and disruptive magic.");
 
         addClass(SkillType.Druid, Material.SAPLING,
-                "Druids act as supports for their team, empowering",
-                        "their allies with enchantments and protecting",
-                        "them with healing magic. In addition, they offer",
-                        "a substantial amount of utility in team-fights with",
-                        "their crowd control.");
+                "Druids bolster their team with their supportive",
+                        "abilities, supplying powerful enhancements to their",
+                        "allies while keeping enemies at bay with debilitating",
+                        "magic.");
 
-        addClass(SkillType.Rogue, Material.LEATHER_BOOTS,
-                "Rogues are agile assassins who specialize in",
-                        "taking down fragile priority targets. They depend",
-                        "on their mobility to close the gap between their",
-                        "enemies and their high burst damage to dispatch",
-                        "them quickly.");
+        addClass(SkillType.Rogue, Material.EYE_OF_ENDER,
+                "Rogues are opportunists who lurk in the shadows,",
+                        "waiting for the perfect time to ambush their victims",
+                        "and dispatch them with their blinding speed",
+                        "and powerful burst damage.");
 
         addClass(SkillType.Thief, Material.COAL, 
-                "Thieves are cunning and elusive, adept at",
-                        "disorienting their adversaries with a plethora of",
-                        "tools and abilities. Rather than eliminating the",
-                        "opposition themselves, they aim to distract them",
-                        "for as long as possible while their allies capitalize",
-                        "off the confusion.");
+                "Thieves are quick, cunning, and adept at creating",
+                        "chaos in the midst of battle, utilizing a wide array of",
+                        "tools and and techniques to disorient and deceive their",
+                        "enemies.");
         /*
+
         ItemStack assassin = ItemStackUtil.createItem(Material.LEATHER_HELMET, "Assassin", Arrays.asList("Use stealth hacks", "and insane mobility to kill every1"));
         ItemStack brute = ItemStackUtil.createItem(Material.DIAMOND_HELMET, "Brute", Arrays.asList("Use crowd control", "and filth to kill every1"));
         ItemStack mage = ItemStackUtil.createItem(Material.GOLD_HELMET, "Mage", Arrays.asList("Use insane IQ", "and insane skills to kill every1"));
@@ -116,23 +105,23 @@ public class ChampionsInventory {
             case Warden:
                 return new ChampionsItem[]{ChampionsItem.WARDEN_SWORD, ChampionsItem.WARDEN_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
             case Vanguard:
-                return new ChampionsItem[] {ChampionsItem.VANGUARD_SHOVEL, ChampionsItem.VANGUARD_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
+                return new ChampionsItem[] {ChampionsItem.VANGUARD_SWORD, ChampionsItem.VANGUARD_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
             case Berserker:
-                return new ChampionsItem[] {ChampionsItem.BERSERKER_AXE, ChampionsItem.BREAD, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
+                return new ChampionsItem[] {ChampionsItem.BERSERKER_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
             case Duelist:
                 return new ChampionsItem[] {ChampionsItem.DUELIST_SWORD, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
             case Marksman:
-                return new ChampionsItem[] {ChampionsItem.MARKSMAN_SWORD, ChampionsItem.MARKSMAN_BOW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MARKSMAN_ARROWS};
+                return new ChampionsItem[] {ChampionsItem.MARKSMAN_SWORD, ChampionsItem.MARKSMAN_BOW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MARKSMAN_ARROWS, ChampionsItem.MARKSMAN_ARROWS, ChampionsItem.GRAPPLING_HOOK};
             case Hunter:
-                return new ChampionsItem[] {ChampionsItem.HUNTER_SWORD, ChampionsItem.HUNTER_AXE, ChampionsItem.HUNTER_BOW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.BEAR_TRAP, ChampionsItem.HUNTER_ARROWS};
+                return new ChampionsItem[] {ChampionsItem.HUNTER_SWORD, ChampionsItem.HUNTER_AXE, ChampionsItem.HUNTER_BOW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.HUNTER_ARROWS};
             case Thief:
-                return new ChampionsItem[] {ChampionsItem.THIEF_SWORD, ChampionsItem.THIEF_AXE, ChampionsItem.THIEF_BOW, ChampionsItem.THIEF_ARROWS, ChampionsItem.STUN_CHARGE, ChampionsItem.COBWEB, ChampionsItem.SMOKE_BOMB, ChampionsItem.ELIXIR};
+                return new ChampionsItem[] {ChampionsItem.THIEF_SWORD, ChampionsItem.THIEF_AXE, ChampionsItem.THIEF_BOW, ChampionsItem.THIEF_ARROWS, ChampionsItem.ELIXIR, ChampionsItem.ELIXIR};
             case Rogue:
-                return new ChampionsItem[] {ChampionsItem.ROGUE_SWORD, ChampionsItem.ROGUE_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
+                return new ChampionsItem[] {ChampionsItem.ROGUE_SWORD, ChampionsItem.ROGUE_AXE, ChampionsItem.ELIXIR, ChampionsItem.ELIXIR, ChampionsItem.WATER_BOTTLE};
             case Druid:
-                return new ChampionsItem[] {ChampionsItem.LIFE_SWORD, ChampionsItem.LIFE_SHOVEL, ChampionsItem.LIFE_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
+                return new ChampionsItem[] {ChampionsItem.LIFE_SWORD, ChampionsItem.LIFE_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
             case Sorcerer:
-                return new ChampionsItem[] {ChampionsItem.SPELL_SWORD, ChampionsItem.SPELL_SHOVEL, ChampionsItem.SPELL_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
+                return new ChampionsItem[] {ChampionsItem.SPELL_SWORD, ChampionsItem.SPELL_AXE, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW, ChampionsItem.MUSHROOM_STEW};
             default:
                 throw new IllegalStateException("Unexpected value: " + skillType);
         }

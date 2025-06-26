@@ -28,15 +28,15 @@ import static com.podcrash.api.world.BlockUtil.getPlayersInArea;
 
 @SkillMetadata(id = 1007, skillType = SkillType.Sorcerer, invType = InvType.AXE)
 public class Meteor extends Instant implements IEnergy, ICooldown {
-    private int energyUsage = 55;
-    private int radius = 3;
+    private int energyUsage = 70;
+    private int radius = 5;
     private int duration = 5;
 
     public Meteor() {}
 
     @Override
     public float getCooldown() {
-        return 7;
+        return 12;
     }
 
     @Override
@@ -82,13 +82,23 @@ public class Meteor extends Instant implements IEnergy, ICooldown {
 
         for(Player p: playersAffected) {
             Vector exp = VectorUtil.fromAtoB(event.getEntity().getLocation(), p.getLocation()).normalize();
-            exp.multiply(1.05).setY(exp.getY() + 0.2);
-            p.setVelocity(exp);
+
+            
+            
+            // exp.multiply(1.05).setY(exp.getY() + 0.6);
+            // p.setVelocity(exp);
+
+        
+            p.setVelocity(exp.multiply(0.4).setY(1.25));
+
+            if (p == getPlayer()) {
+                getPlayer().setFallDistance(-8f);
+            }
             if(isAlly(p)) continue;
             StatusApplier.getOrNew(p).applyStatus(Status.FIRE, duration, 5);
             double dist = p.getLocation().distanceSquared(event.getEntity().getLocation());
             double multiplier = (37D - dist) /36D;
-            DamageApplier.damage(p, getPlayer(), 8 * multiplier, this, true);
+            DamageApplier.damage(p, getPlayer(), 8 * multiplier, this, false);
         }
         //TODO: this needs refactor
     }

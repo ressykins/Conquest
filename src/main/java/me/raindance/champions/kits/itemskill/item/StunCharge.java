@@ -18,7 +18,7 @@ import org.bukkit.util.Vector;
 import java.util.List;
 
 //when there's a better item system, change this
-@ItemMetaData(mat = Material.REDSTONE_LAMP_OFF, actions = {Action.RIGHT_CLICK_AIR, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK})
+@ItemMetaData(mat = Material.REDSTONE_LAMP_OFF, actions = {Action.RIGHT_CLICK_AIR, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK, Action.RIGHT_CLICK_BLOCK})
 public class StunCharge extends TrapItem {
     public StunCharge() {
         super(2500);
@@ -35,7 +35,7 @@ public class StunCharge extends TrapItem {
     }
 
     @Override
-    protected void primeTrap(Item item) {
+    public void primeTrap(Item item) {
         AbstractPacket packet2 = ParticleGenerator.createBlockEffect(item.getLocation().toVector(), Material.OBSIDIAN.getId());
         for(Player p : item.getWorld().getPlayers()) {
             packet2.sendPacket(p);
@@ -44,7 +44,7 @@ public class StunCharge extends TrapItem {
     }
 
     @Override
-    protected void snareTrap(Player owner, Player player, Item item) {
+    public void snareTrap(Player owner, Player player, Item item) {
         Location land = item.getLocation();
         World world = land.getWorld();
         world.strikeLightningEffect(land);

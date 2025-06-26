@@ -9,6 +9,7 @@ import com.podcrash.api.kits.enums.ItemType;
 import me.raindance.champions.kits.SkillType;
 import com.podcrash.api.sound.SoundPlayer;
 import com.podcrash.api.util.VectorUtil;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.util.Vector;
@@ -30,7 +31,7 @@ public class DefensiveStance extends Skill {
     public void hit(DamageApplyEvent event) {
         if ((event.getCause() == Cause.MELEE || event.getCause() == Cause.PROJECTILE)){
             if(event.getAttacker() == getPlayer()) {
-                if(System.currentTimeMillis() - getLastUsed() <= 1000L) {
+                if(System.currentTimeMillis() - getLastUsed() < 1000L) {
                     event.setCancelled(true);
                 }
             }

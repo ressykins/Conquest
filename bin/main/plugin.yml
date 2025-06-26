@@ -1,0 +1,59 @@
+name: Champions
+main: me.raindance.champions.Main
+version: 0.1
+author: RainDanceMC
+
+softdepend: [ProtocolLib, PodcrashAPI]
+commands:
+  leave:
+      description: Leave a game.
+      usage: /leave
+  wteleport:
+    aliases: [wtp, wtele]
+    description: Teleport to another world.
+    usage: /wteleport <worldname>
+  invis:
+    description: Gives you strength (RainDanceMC is actually high IQ).
+    usage: /invis <duration>
+  damage:
+    description: Damage yourself (not working currently).
+    usage: /damage <amount>
+  disguise:
+    description: Disguise as a player.
+    usage: /disguise <player-name>
+  velo:
+    description: Add to your current velocity.
+    usage: /velo <x> <y> <z>
+  currentlocation:
+    description: Find your current location.
+    usage: /currentlocation
+  copyworld:
+    description: Copy a world.
+    usage: /copyworld <name>
+  deleteworld:
+    description: Delete a world.
+    usage: /deleteworld <name>
+  mapinfo:
+    description: Find information about a map.
+    usage: /mapinfo <map>
+  rc:
+    description: Reload the Champions plugin.
+    usage: /rc
+  skill:
+    description: View your current loadout.
+    usage: /skill
+  newgame:
+    description: Create a new Champions game. Valid gamemodes as of now include; DOM (case sensitive?)
+    usage: /newgame <GameMode>
+  lock:
+    description: lock the inventory or not.
+permissions:
+    Champions.*:
+      description: Permission to use all Champions commands.
+      children:
+        Champions.host: true
+        Champions.developer: true
+    Champions.host:
+      description: Permission to set maps, startContinuousAction, and end games.
+    Champions.developer:
+      description: Permission to use developer-only commands that could greatly impact the server.

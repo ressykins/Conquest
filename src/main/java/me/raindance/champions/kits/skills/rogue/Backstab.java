@@ -1,6 +1,8 @@
 package me.raindance.champions.kits.skills.rogue;
 
 import com.podcrash.api.damage.Cause;
+import com.podcrash.api.effect.status.Status;
+import com.podcrash.api.effect.status.StatusApplier;
 import com.podcrash.api.events.DamageApplyEvent;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
@@ -17,7 +19,7 @@ import org.bukkit.event.EventPriority;
 
 @SkillMetadata(id = 601, skillType = SkillType.Rogue, invType = InvType.PRIMARY_PASSIVE)
 public class Backstab extends Passive {
-    private final float bonus = 4;
+    private final float bonus = 3;
 
     @Override
     public String getName() {
@@ -42,6 +44,7 @@ public class Backstab extends Passive {
             event.addSource(this);
             event.setDamage(event.getDamage() + bonus);
             event.setModified(true);
+            StatusApplier.getOrNew(victim).applyStatus(Status.SLOW, 3, 0);
             SoundPlayer.sendSound(victim.getLocation(), "game.neutral.hurt", 0.5F, 126);
             victim.getWorld().playEffect(event.getVictim().getLocation(), Effect.STEP_SOUND, 55);
         }

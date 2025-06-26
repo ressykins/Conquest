@@ -27,10 +27,10 @@ public final class ConquestUtil {
 
     public static ChampionsPlayer defaultBuild(Player player) {
         List<Skill> skills = new ArrayList<>();
-        skills.add(new Riposte());
+        skills.add(new LifeRip());
         skills.add(new Lunge());
-        skills.add(new Revenge());
-        skills.add(new FatalStrike());
+        skills.add(new Dragonslayer());
+        skills.add(new Lifeline());
         skills.add(new Challenger());
 
         Duelist knight = new Duelist(player, skills);

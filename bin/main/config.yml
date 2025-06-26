@@ -1,0 +1,15 @@
+worlds:
+  - Sakura
+  - Delphic
+  - Pinewood
+
+roles:
+  developer:
+    players:
+    permissions:
+      - Champions.developer
+      - Champions.host
+  host:
+    players:
+    permissions:
+      - Champions.host

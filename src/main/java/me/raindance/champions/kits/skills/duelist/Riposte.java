@@ -1,5 +1,10 @@
 package me.raindance.champions.kits.skills.duelist;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.packetwrapper.abstractpackets.WrapperPlayServerWorldParticles;
+import com.podcrash.api.effect.particle.ParticleGenerator;
+import com.podcrash.api.effect.status.Status;
+import com.podcrash.api.effect.status.StatusApplier;
 import com.podcrash.api.events.DamageApplyEvent;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
@@ -9,6 +14,8 @@ import com.podcrash.api.kits.iskilltypes.action.ICooldown;
 import com.podcrash.api.kits.skilltypes.Instant;
 import com.podcrash.api.time.TimeHandler;
 import com.podcrash.api.time.resources.TimeResource;
+import com.podcrash.api.util.PacketUtil;
+
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -22,7 +29,6 @@ public class Riposte extends Instant implements TimeResource, ICooldown {
     private boolean isRiposting = false;
     private boolean ripoSuccess;
     private long ripoSuccessTime;
-    private final int MAX_LEVEL = 5;
     private long time;
 
     @Override
@@ -58,7 +64,7 @@ public class Riposte extends Instant implements TimeResource, ICooldown {
             isRiposting = false;
             event.setCancelled(true);
             TimeHandler.unregister(this);
-            LivingEntity victim = event.getAttacker();
+            // LivingEntity victim = event.getAttacker();
             //getPlayer().sendMessage(getUsedMessage(victim).replace("used", "replaced"));
             player.getWorld().playSound(player.getLocation(), Sound.ZOMBIE_METAL, 0.5f, 1.6f);
             ripoSuccess = true;
@@ -67,8 +73,9 @@ public class Riposte extends Instant implements TimeResource, ICooldown {
         }
         if (event.getAttacker() == getPlayer() && ripoSuccess) {
             if (System.currentTimeMillis() - ripoSuccessTime < 1200L) {
-                event.setDamage(event.getDamage() + 0.5);
+                // event.setDamage(event.getDamage() + 2);
                 event.addSource(this);
+                StatusApplier.getOrNew(event.getVictim()).applyStatus(Status.CRIPPLE, 3, 0);
                 player.getWorld().playSound(player.getLocation(), Sound.ZOMBIE_METAL, 1f, 1.6f);
                 getPlayer().sendMessage(String.format("%s%s> %sYou riposted %s%s%s.",
                         ChatColor.BLUE,
@@ -78,7 +85,8 @@ public class Riposte extends Instant implements TimeResource, ICooldown {
                         event.getVictim().getName(),
                         ChatColor.GRAY));
                 event.setModified(true);
-            } else getPlayer().sendMessage(getFailedMessage());
+            } 
+            else getPlayer().sendMessage(getFailedMessage());
             ripoSuccess = false;
         }
     }
@@ -105,7 +113,13 @@ public class Riposte extends Instant implements TimeResource, ICooldown {
     @Override
     public void cleanup() {
         this.setLastUsed(System.currentTimeMillis());
+
         getPlayer().sendMessage(getFailedMessage());
+
+        WrapperPlayServerWorldParticles packet = ParticleGenerator.createParticle(EnumWrappers.Particle.VILLAGER_ANGRY, 4);
+        packet.setLocation(getPlayer().getEyeLocation());
+        PacketUtil.asyncSend(packet, getPlayers());
+        
         TimeHandler.unregister(this);
         isRiposting = false;
     }

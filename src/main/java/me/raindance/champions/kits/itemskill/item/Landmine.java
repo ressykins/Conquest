@@ -20,15 +20,15 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-@ItemMetaData(mat = Material.TNT, actions = {Action.RIGHT_CLICK_AIR, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK})
+@ItemMetaData(mat = Material.TNT, actions = {Action.RIGHT_CLICK_AIR, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK, Action.RIGHT_CLICK_BLOCK})
 public class Landmine extends TrapItem {
     public Landmine() {
         super(5000);
-        despawnDelay = 90 * 1000;
+        despawnDelay = 30 * 1000;
     }
 
     @Override
-    protected Item throwItem(Player player, Action action) {
+    public Item throwItem(Player player, Action action) {
         Location location = player.getEyeLocation();
         Vector direction = player.getLocation().getDirection();
         Vector vector = new Vector(0, 0, 0);
@@ -37,7 +37,7 @@ public class Landmine extends TrapItem {
     }
 
     @Override
-    protected void primeTrap(Item item) {
+    public void primeTrap(Item item) {
         AbstractPacket packet2 = ParticleGenerator.createBlockEffect(item.getLocation().toVector(), Material.OBSIDIAN.getId());
         for(Player p : item.getWorld().getPlayers()) {
             packet2.sendPacket(p);
@@ -45,7 +45,7 @@ public class Landmine extends TrapItem {
     }
 
     @Override
-    protected void snareTrap(Player owner, Player player, Item item) {
+    public void snareTrap(Player owner, Player player, Item item) {
         Location location = item.getLocation();
         WrapperPlayServerWorldParticles packet = ParticleGenerator.createParticle(EnumWrappers.Particle.EXPLOSION_HUGE, 3);
         packet.setLocation(location);
@@ -59,9 +59,9 @@ public class Landmine extends TrapItem {
             double percentage = (36D - distanceSquared)/36D + 0.25D;
             if(percentage > 1D) percentage = 1D;
             Vector vector = VectorUtil.fromAtoB(location, entity.getLocation()).add(up).normalize();
-            vector.multiply(3 * percentage);
+            vector.multiply(2 * percentage);
             entity.setVelocity(vector);
-            DamageApplier.damage(entity, owner, 8 * percentage, this, false);
+            // DamageApplier.damage(entity, owner, 8 * percentage, this, false);
             if(entity instanceof Player)
                 packet.sendPacket((Player) entity);
         }
@@ -71,6 +71,6 @@ public class Landmine extends TrapItem {
 
     @Override
     public String getName() {
-        return "Landmine";
+        return "Proximity Mine";
     }
 }

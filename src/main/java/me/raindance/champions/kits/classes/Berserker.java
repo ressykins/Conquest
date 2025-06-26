@@ -13,10 +13,10 @@ import java.util.List;
 
 public class Berserker extends ChampionsPlayer {
     public Berserker(Player player, List<Skill> skills) {
-        super(player, 40);
+        super(player, 55);
         this.skills = new HashSet<>(skills);
-        setSound(new SoundWrapper("mob.blaze.hit", 0.95F, 66));
-        this.armor = new Material[]{Material.DIAMOND_BOOTS, Material.DIAMOND_LEGGINGS};
+        setSound(new SoundWrapper("mob.blaze.hit", 0.95F, 57));
+        this.armor = new Material[]{Material.IRON_BOOTS, Material.LEATHER_LEGGINGS, Material.LEATHER_CHESTPLATE, Material.IRON_HELMET};
     }
 
     @Override

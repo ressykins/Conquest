@@ -22,20 +22,24 @@ import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+// import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 
 import java.util.List;
 
 @SkillMetadata(id = 704, skillType = SkillType.Thief, invType = InvType.SWORD)
 public class Illusion extends Continuous implements ICooldown {
-    private final int duration = 3;
+    private final int duration = 5;
     private long time;
     private boolean a = true;
     private Skeleton skeleton;
 
     @Override
     public float getCooldown() {
-        return 12;
+        return 10;
     }
 
     @Override
@@ -46,6 +50,7 @@ public class Illusion extends Continuous implements ICooldown {
     public LivingEntity getSkeleton() {
         return skeleton;
     }
+
     @Override
     protected void doContinuousSkill() {
         if(a && !onCooldown()) {
@@ -106,11 +111,12 @@ public class Illusion extends Continuous implements ICooldown {
         Location location = skeleton.getLocation();
         WrapperPlayServerWorldParticles particles = ParticleGenerator.createParticle(location.toVector(), EnumWrappers.Particle.SMOKE_LARGE, 9, 0.3F,0.4F,0.3F);
         List<Player> players = getPlayers();
-        for(Player player : players) {
-            if(player != getPlayer() && player.getLocation().distanceSquared(location) <= 9) {
-                StatusApplier.getOrNew(player).applyStatus(Status.SLOW, duration, 1);
-            }
-        }
+        // for(Player player : players) {
+        //     if(player != getPlayer() && player.getLocation().distanceSquared(location) <= 9) {
+        //         StatusApplier.getOrNew(player).applyStatus(Status.SLOW, 3, 2);
+        //         StatusApplier.getOrNew(player).applyStatus(Status.BLIND, 3, 0);
+        //     }
+        // }
         PacketUtil.asyncSend(particles, players);
         for (int i=0 ; i<2 ; i++) location.getWorld().playSound(location, Sound.FIZZ, 2f, 0.4f);
         this.setLastUsed(System.currentTimeMillis());
@@ -128,4 +134,43 @@ public class Illusion extends Continuous implements ICooldown {
         despawn(getSkeleton());
     }
 
+
+
+    // Event Listener for when skeleton takes damage
+    @EventHandler(
+            priority = EventPriority.MONITOR
+    )
+    public void onSkeletonDamage(EntityDamageByEntityEvent event) {
+        // Check if the event is for the skeleton and if it's the correct type of damage
+        if (event.getEntity() instanceof Skeleton && event.getEntity() == this.skeleton) {
+            // Ensure the damager is a player and check if they are an ally
+            if (event.getDamager() instanceof Player) {
+                Player attacker = (Player) event.getDamager();
+
+                // Check if the attacker is an ally of the player (assuming isAlly() method exists)
+                if (isAlly(attacker)) {
+                    // Cancel the damage if the attacker is an ally
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+            // Apply Slowness and Blindness to nearby players
+            Location location = skeleton.getLocation();
+            WrapperPlayServerWorldParticles packet = ParticleGenerator.createParticle(EnumWrappers.Particle.EXPLOSION_HUGE, 3);
+            packet.setLocation(location);
+            List<Player> players = getPlayers();
+            for (Player player : players) {
+                if (player != getPlayer() && player.getLocation().distanceSquared(location) <= 9 && !isAlly(player)) {
+                    StatusApplier.getOrNew(player).applyStatus(Status.SLOW, 3, 2);
+                    StatusApplier.getOrNew(player).applyStatus(Status.BLIND, 3, 0);
+                }
+            }
+            
+            // Create a particle effect (optional)
+            WrapperPlayServerWorldParticles particles = ParticleGenerator.createParticle(location.toVector(), EnumWrappers.Particle.SMOKE_LARGE, 9, 0.3F, 0.4F, 0.3F);
+            PacketUtil.asyncSend(particles, players);
+            for (int i = 0; i < 2; i++) location.getWorld().playSound(location, Sound.FIZZ, 2f, 0.4f);
+            despawn(getSkeleton());
+        }
+    }
 }

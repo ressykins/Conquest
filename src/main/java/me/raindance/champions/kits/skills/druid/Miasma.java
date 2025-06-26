@@ -16,6 +16,8 @@ import com.podcrash.api.kits.iskilltypes.action.IConstruct;
 import com.podcrash.api.kits.iskilltypes.action.ICooldown;
 import com.podcrash.api.kits.iskilltypes.action.IEnergy;
 import com.podcrash.api.kits.skilltypes.Instant;
+import com.podcrash.api.kits.skilltypes.TogglePassive;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -26,24 +28,24 @@ import org.bukkit.util.Vector;
 
 import java.util.Random;
 
-@SkillMetadata(id = 203, skillType = SkillType.Druid, invType = InvType.SHOVEL)
-public class Miasma extends Instant implements IEnergy, ICooldown, IConstruct {
-    private final float duration = 5;
-    private int energyUsage = 55;
+@SkillMetadata(id = 203, skillType = SkillType.Druid, invType = InvType.DROP)
+public class Miasma extends TogglePassive implements IEnergy, TimeResource, IConstruct {
+    private int energyUsage = 30;
     private final double[][] pleaseLoad = new double[60][2];
     private double radius = 7;
+    private int i = 0;
 
-    @Override
-    protected void doSkill(PlayerEvent event, Action action) {
-        if(!rightClickCheck(action) || onCooldown() || !hasEnergy()) return;
-        useEnergy();
-        setLastUsed(System.currentTimeMillis());
+    // @Override
+    // protected void doSkill(PlayerEvent event, Action action) {
+    //     if(!rightClickCheck(action) || onCooldown() || !hasEnergy()) return;
+    //     useEnergy();
+    //     setLastUsed(System.currentTimeMillis());
 
-        spiral(getPlayer().getLocation());
-        getGame().consumeBukkitPlayer(this::use);
+    //     spiral(getPlayer().getLocation());
+    //     getGame().consumeBukkitPlayer(this::use);
 
-        getPlayer().sendMessage(getUsedMessage());
-    }
+    //     getPlayer().sendMessage(getUsedMessage());
+    // }
 
 
     @Override
@@ -62,12 +64,40 @@ public class Miasma extends Instant implements IEnergy, ICooldown, IConstruct {
         }
     }
 
+    @Override
+    public void toggle() {
+        run(1, 0);
+    }
+
+    @Override
+    public void task() {
+        i++;
+        Location location = getPlayer().getLocation();
+
+        useEnergy(getEnergyUsageTicks());
+
+        spiral(location);
+        getGame().consumeBukkitPlayer(this::use);
+    }
+
+    @Override
+    public boolean cancel() {
+        return !isToggled() || !hasEnergy(getEnergyUsageTicks()) || isInWater();
+    }
+    @Override
+    public void cleanup() {
+
+        if(!hasEnergy(getEnergyUsageTicks())) {
+            forceToggle();
+        }
+    }
+
     private void use(Player victim) {
         if(victim == getPlayer() || isAlly(victim)) return;
-        if(victim.getLocation().distanceSquared(getPlayer().getLocation()) > Math.pow(duration, 2)) return;
+        if(victim.getLocation().distanceSquared(getPlayer().getLocation()) > (radius * radius)) return;
 
-        StatusApplier.getOrNew(victim).applyStatus(Status.POISON, duration, 1, true);
-        StatusApplier.getOrNew(victim).applyStatus(Status.WEAKNESS, duration, 1, false);
+        StatusApplier.getOrNew(victim).applyStatus(Status.POISON, 3, 1, true);
+        StatusApplier.getOrNew(victim).applyStatus(Status.DIZZY, 3, 1, false);
 
     }
 
@@ -77,7 +107,7 @@ public class Miasma extends Instant implements IEnergy, ICooldown, IConstruct {
             @Override
             public void task() {
                 for(int i = a; i < radius; i++) {
-                    playerLocation.getWorld().playSound(playerLocation, Sound.FIZZ, 1.5f, 1f + (float) ((i/10D % (Math.PI / 2d)) / (Math.PI / 2)));
+                    // playerLocation.getWorld().playSound(playerLocation, Sound.FIZZ, 1.5f, 1f + (float) ((i/10D % (Math.PI / 2d)) / (Math.PI / 2)));
                 }
                 a++;
             }
@@ -112,10 +142,6 @@ public class Miasma extends Instant implements IEnergy, ICooldown, IConstruct {
 
     }
 
-    @Override
-    public float getCooldown() {
-        return 8;
-    }
 
     @Override
     public String getName() {
@@ -124,7 +150,7 @@ public class Miasma extends Instant implements IEnergy, ICooldown, IConstruct {
 
     @Override
     public ItemType getItemType() {
-        return ItemType.SHOVEL;
+        return ItemType.NULL;
     }
 
     @Override

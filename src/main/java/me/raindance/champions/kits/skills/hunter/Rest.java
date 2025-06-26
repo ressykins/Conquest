@@ -1,5 +1,6 @@
 package me.raindance.champions.kits.skills.hunter;
 
+import com.packetwrapper.abstractpackets.AbstractPacket;
 import com.packetwrapper.abstractpackets.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.podcrash.api.effect.particle.ParticleGenerator;
@@ -7,20 +8,23 @@ import com.podcrash.api.effect.status.Status;
 import com.podcrash.api.effect.status.StatusApplier;
 import com.podcrash.api.events.DamageApplyEvent;
 import com.podcrash.api.sound.SoundPlayer;
+import com.podcrash.api.util.PacketUtil;
 import com.podcrash.api.kits.KitPlayerManager;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
 import me.raindance.champions.kits.SkillType;
 import com.podcrash.api.kits.skilltypes.Continuous;
 import net.md_5.bungee.api.ChatColor;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
-
 import java.util.Random;
 
 @SkillMetadata(id = 409, skillType = SkillType.Hunter, invType = InvType.SWORD)
 public class Rest extends Continuous {
-    private final long duration = 3000L;
+    private final long duration = 2000L;
     private boolean active;
     private Random rand;
     private StatusApplier applier;
@@ -43,6 +47,28 @@ public class Rest extends Continuous {
         //if not enough time has passed, just wait until there is enough time
         if(System.currentTimeMillis() - start < duration) return;
         applier.applyStatus(Status.REGENERATION, 2.5f, 0, false, false);
+
+        WrapperPlayServerWorldParticles packet = ParticleGenerator.createParticle(EnumWrappers.Particle.REDSTONE, 4);
+        Location headLocation = getPlayer().getEyeLocation().clone(); // Clone to avoid modifying the player's eye location
+        headLocation.setY(headLocation.getY() + 0.5); // Adjust Y to move above the head (you can tweak 0.5 as needed)
+        packet.setLocation(headLocation);
+        
+        PacketUtil.asyncSend(packet, getPlayers());
+        
+
+        // // Create the particle packet
+        // WrapperPlayServerWorldParticles safeParticles = 
+        //     ParticleGenerator.createParticle(
+        //         getPlayer().getLocation().toVector().add(new Vector(0, 1, 0)), 
+        //         EnumWrappers.Particle.VILLAGER_HAPPY, 
+        //         2, 
+        //         0, 0, 0
+        //     );
+
+        // // Get all allies and send the particle to each, excluding the player themselves
+        // GameManager.getGame().getTeam(getPlayer()).getBukkitPlayers().stream()
+        //     .filter(ally -> !ally.equals(getPlayer()))  // Exclude the player
+        //     .forEach(ally -> PacketUtil.syncSend(safeParticles, ally));
 
         if(!effectActive) {
             getPlayer().sendMessage(getUsedMessage().replace("used", "activated"));

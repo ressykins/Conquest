@@ -1,7 +1,6 @@
 package me.raindance.champions.kits.classes;
 
 import com.podcrash.api.sound.SoundWrapper;
-import com.podcrash.api.kits.KitPlayer;
 import com.podcrash.api.kits.Skill;
 import me.raindance.champions.kits.SkillType;
 import me.raindance.champions.kits.ChampionsPlayer;

@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
@@ -97,17 +96,18 @@ public class Sharpshooter extends Passive implements ICharge {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void fall(EntityDamageEvent e) {
-        if(getPlayer() == e.getEntity() && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            double totalDamage = e.getDamage() - 2;
-            if(totalDamage <= 0) {
-                e.setDamage(0);
-                e.setCancelled(true);
-            }
-            e.setDamage(totalDamage);
-        }
-    }
+    // @EventHandler(priority = EventPriority.LOW)
+    // public void fall(EntityDamageEvent e) {
+    //     if(getPlayer() == e.getEntity() && e.getCause() == EntityDamageEvent.DamageCause.FALL) {
+    //         double totalDamage = e.getDamage() - 2;
+    //         if(totalDamage <= 0) {
+    //             e.setDamage(0);
+    //             e.setCancelled(true);
+    //         }
+    //         e.setDamage(totalDamage);
+    //     }
+    // }
+
     @Override
     public void addCharge() {
         if (charges < MAX_CHARGES) charges++;

@@ -17,7 +17,7 @@ import org.bukkit.event.block.Action;
 public class Mead implements IItem {
     @Override
     public String getName() {
-        return "Mead";
+        return "Bread";
     }
 
     @Override
@@ -26,16 +26,9 @@ public class Mead implements IItem {
     }
 
     private void eatBread(Player player) {
-        StatusApplier.getOrNew(player).applyStatus(Status.STRENGTH, 3, 0, true, true);
+        StatusApplier.getOrNew(player).applyStatus(Status.STRENGTH, 5, 0, true, true);
+        StatusApplier.getOrNew(player).applyStatus(Status.MARKED, 5, 0, true, true);
         Location location = player.getEyeLocation();
-        SoundPlayer.sendSound(location, "random.eat", 0.75F, 88);
-        WrapperPlayServerWorldEvent eat = ParticleGenerator.createBlockEffect(location, Material.BREAD.getId());
-
-        WrapperPlayServerEntityStatus status = new WrapperPlayServerEntityStatus();
-        status.setEntityId(WrapperPlayServerEntityStatus.Status.EATING_ACCEPTED);
-        status.setEntityId(player.getEntityId());
-
-        for(Player p : player.getWorld().getPlayers())
-            ParticleGenerator.generate(p, status, eat);
+        SoundPlayer.sendSound(location, "random.drink", 0.75F, 88);
     }
 }

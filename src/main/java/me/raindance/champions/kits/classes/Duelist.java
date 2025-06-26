@@ -5,8 +5,13 @@ import com.podcrash.api.kits.KitPlayer;
 import com.podcrash.api.kits.Skill;
 import me.raindance.champions.kits.SkillType;
 import me.raindance.champions.kits.ChampionsPlayer;
+
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.HashSet;
 import java.util.List;
@@ -14,13 +19,30 @@ import java.util.List;
 public class Duelist extends ChampionsPlayer {
 
     public Duelist(Player player, List<Skill> skills) {
-        super(player, 45);
+        super(player, 55);
         this.skills = new HashSet<>(skills);
-        setSound(new SoundWrapper("mob.blaze.hit", 0.95F, 57));
-        this.armor = new Material[]{Material.IRON_BOOTS, Material.IRON_LEGGINGS, Material.IRON_CHESTPLATE, Material.IRON_HELMET};
+        setSound(new SoundWrapper("random.break", 0.95F, 115));
+        this.armor = new Material[]{Material.LEATHER_BOOTS, Material.LEATHER_LEGGINGS, Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET};
     }
 
     public SkillType getType() {
         return SkillType.Duelist;
+    }
+
+    @Override
+    public boolean equip() {
+        if(!super.equip()) return false;
+        EntityEquipment equipment = getPlayer().getEquipment();
+        for(ItemStack armor : equipment.getArmorContents()) {
+            colorBlack(armor);
+        }
+        return true;
+    }
+
+    private void colorBlack(ItemStack leatherArmor) {
+        LeatherArmorMeta meta = (LeatherArmorMeta) leatherArmor.getItemMeta();
+        meta.setColor(Color.NAVY);
+
+        leatherArmor.setItemMeta(meta);
     }
 }

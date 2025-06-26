@@ -6,6 +6,9 @@ import com.podcrash.api.effect.particle.ParticleGenerator;
 import com.podcrash.api.location.Coordinate;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
+
+import com.podcrash.api.kits.KitPlayer;
+import com.podcrash.api.kits.KitPlayerManager;
 import com.podcrash.api.kits.enums.ItemType;
 import me.raindance.champions.kits.SkillType;
 import com.podcrash.api.kits.iskilltypes.action.*;
@@ -19,14 +22,13 @@ import java.util.LinkedList;
 
 @SkillMetadata(id = 707, skillType = SkillType.Thief, invType = InvType.DROP)
 public class Recall extends Drop implements ICooldown, IContinuousPassive, IPassiveTimer, IConstruct {
-    private double health;
 
     private final int time;
     private LinkedList<Coordinate> locations = new LinkedList<>();
 
     @Override
     public float getCooldown() {
-        return 20;
+        return 13;
     }
 
     @Override
@@ -40,7 +42,6 @@ public class Recall extends Drop implements ICooldown, IContinuousPassive, IPass
     }
 
     public Recall() {
-        health = 7;
         time = 3;
     }
 
@@ -77,7 +78,14 @@ public class Recall extends Drop implements ICooldown, IContinuousPassive, IPass
         newLoc.setPitch(current.getPitch());
         newLoc.setYaw(current.getYaw());
         getPlayer().teleport(newLoc);
-        getChampionsPlayer().heal(health);
+
+        KitPlayer thief = KitPlayerManager.getInstance().getKitPlayer(getPlayer());
+        // Find the current percentage of health remaining, then multiply it by our real max HP value (e.g. 40 for zerk right now)
+        double trueCurrentHP = (getPlayer().getHealth() / getPlayer().getMaxHealth()) * thief.getHP();
+        double trueMissingHP = thief.getHP() - trueCurrentHP;
+        double heal = trueMissingHP * 0.2;
+
+        getChampionsPlayer().heal(heal);
     }
     /*
     Record locations

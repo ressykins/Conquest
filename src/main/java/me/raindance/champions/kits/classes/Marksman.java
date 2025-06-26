@@ -20,8 +20,8 @@ public class Marksman extends ChampionsPlayer {
     public Marksman(Player player, List<Skill> skills) {
         super(player, 45);
         this.skills = new HashSet<>(skills);
-        setSound(new SoundWrapper("random.break", 0.95F, 115));
-        this.armor = new Material[]{Material.LEATHER_BOOTS, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_CHESTPLATE, Material.LEATHER_HELMET};
+        setSound(new SoundWrapper("random.bow", 0.95F, 126));
+        this.armor = new Material[]{Material.LEATHER_BOOTS, Material.LEATHER_LEGGINGS, Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET};
     }
 
     public SkillType getType() {
@@ -35,6 +35,8 @@ public class Marksman extends ChampionsPlayer {
         EntityEquipment equipment = getPlayer().getEquipment();
         colorRed(equipment.getBoots());
         colorRed(equipment.getHelmet());
+        colorRed(equipment.getChestplate());
+        colorRed(equipment.getLeggings());
         return true;
     }
 

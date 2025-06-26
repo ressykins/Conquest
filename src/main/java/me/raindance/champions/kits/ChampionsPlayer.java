@@ -68,6 +68,9 @@ public abstract class ChampionsPlayer extends KitPlayer {
     private String niceLookingDescription(Skill skill) {
         StringBuilder result = new StringBuilder();
         List<String> description = SkillInfo.getSkillData(skill).getDescription();
+        if(description == null) {
+            return "";
+        }
         for(int i = 0; i < description.size(); i++) {
             String line = description.get(i);
             if(line != null) {

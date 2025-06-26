@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Rogue extends ChampionsPlayer {
     public Rogue(Player player, List<Skill> skills) {
-        super(player, 35);
+        super(player, 40);
         this.skills = new HashSet<>(skills);
         setSound(new SoundWrapper("random.bow", 0.95F, 126));
         this.armor = new Material[]{Material.LEATHER_BOOTS, Material.LEATHER_LEGGINGS, Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET};

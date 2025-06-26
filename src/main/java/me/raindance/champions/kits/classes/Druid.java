@@ -17,10 +17,10 @@ import java.util.List;
 
 public class Druid extends ChampionsPlayer {
     public Druid(Player player, List<Skill> skills) {
-        super(player, 40);
+        super(player, 50);
         this.skills = new HashSet<>(skills);
         setSound(new SoundWrapper("random.break", 0.95F, 90));
-        this.armor = new Material[]{Material.LEATHER_BOOTS, Material.GOLD_LEGGINGS, Material.GOLD_CHESTPLATE, Material.LEATHER_HELMET};
+        this.armor = new Material[]{Material.LEATHER_BOOTS, Material.LEATHER_LEGGINGS, Material.LEATHER_CHESTPLATE, Material.LEAVES};
     }
 
     @Override
@@ -43,8 +43,7 @@ public class Druid extends ChampionsPlayer {
         if(!super.equip()) return false;
         EntityEquipment equipment = getPlayer().getEquipment();
         for(ItemStack armor : equipment.getArmorContents()) {
-            if(armor.getType() == Material.GOLD_CHESTPLATE ||
-                    armor.getType() == Material.GOLD_LEGGINGS) continue;
+            if(armor.getType() == Material.LEAVES) continue;
             colorGreen(armor);
         }
         return true;

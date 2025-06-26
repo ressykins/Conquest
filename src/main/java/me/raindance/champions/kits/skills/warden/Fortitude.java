@@ -7,24 +7,23 @@ import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
 import com.podcrash.api.kits.enums.ItemType;
 import me.raindance.champions.kits.SkillType;
-import com.podcrash.api.kits.iskilltypes.action.ICooldown;
 import com.podcrash.api.kits.skilltypes.Passive;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-@SkillMetadata(id = 906, skillType = SkillType.Warden, invType = InvType.SECONDARY_PASSIVE)
-public class Fortitude extends Passive implements ICooldown {
+@SkillMetadata(id = 906, skillType = SkillType.Warden, invType = InvType.INNATE)
+public class Fortitude extends Passive {
 
     @Override
     public String getName() {
         return "Fortitude";
     }
 
-    @Override
-    public float getCooldown() {
-        return 4.0F;
-    }
+    // @Override
+    // public float getCooldown() {
+    //     return 4.0F;
+    // }
 
     @Override
     public ItemType getItemType() {
@@ -48,14 +47,14 @@ public class Fortitude extends Passive implements ICooldown {
     }
 
     public void hit() {
-        if(onCooldown()) return;
-        setLastUsed(System.currentTimeMillis());
-        StatusApplier.getOrNew(getPlayer()).applyStatus(Status.REGENERATION, 3, 1);
+        // if(onCooldown()) return;
+        // setLastUsed(System.currentTimeMillis());
+        StatusApplier.getOrNew(getPlayer()).applyStatus(Status.REGENERATION, 5, 0);
     }
 
-    @Override
-    public void setLastUsed(long time) {
-        this.setLastUsedDirect(time);
-    }
+    // @Override
+    // public void setLastUsed(long time) {
+    //     this.setLastUsedDirect(time);
+    // }
 
 }

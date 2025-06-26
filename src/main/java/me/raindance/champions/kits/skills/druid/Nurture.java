@@ -21,7 +21,6 @@ import org.bukkit.material.LongGrass;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -76,7 +75,7 @@ public class Nurture extends TogglePassive implements IEnergy, TimeResource {
             return;
         }
 
-        StatusApplier.getOrNew(victim).applyStatus(Status.REGENERATION, 1.25f, 1, false, true);
+        StatusApplier.getOrNew(victim).applyStatus(Status.REGENERATION, 1.25f, 0, false, true);
         StatusApplier.getOrNew(victim).applyStatus(Status.HEALTH_BOOST, Integer.MAX_VALUE, 0, false, false);
         currentlyBuffed.add(victim);
     }

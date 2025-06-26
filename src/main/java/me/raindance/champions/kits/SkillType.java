@@ -5,20 +5,21 @@ import me.raindance.champions.inventory.ChampionsInventory;
 import java.util.Arrays;
 
 public enum SkillType {
-    Vanguard("Vanguard", new int[]{801,807,806,808,803}),
-    Berserker("Berserker", new int[]{107,102,108,106,105}),
-    Duelist("Duelist", new int[]{308,305,307,304,309}),
-    Warden("Warden", new int[]{905,902,901,906}),
+    Vanguard("Vanguard", new int[]{809,802,804,813,812}),
+    Berserker("Berserker", new int[]{106,102,114,101,105}),
+    Duelist("Duelist", new int[]{313,305,304,302,309}),
+    Warden("Warden", new int[]{904,902,907,911,906}),
     Marksman("Marksman", new int[]{502,505,501,504,506}),
     Hunter("Hunter", new int[]{408,406,404,403,405}),
     Sorcerer("Sorcerer", new int[]{1011,1001,1007,1006,1002}),
     Druid("Druid", new int[]{206,207,201,205,202}),
-    Rogue("Rogue", new int[]{609,605,601,608,603}),
+    Rogue("Rogue", new int[]{604,605,601,611,603}),
     Thief("Thief", new int[]{708,705,702,710,706}),
     Global("All", new int[]{});
 
     /**
      * Knight >> Duelist & Warden
+     * Brute >> Vanguard & Berserker
      * Ranger >> Marksman & Hunter
      * Mage >> Sorcerer & Druid
      * Assassin >> Rogue & Thief

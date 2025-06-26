@@ -11,7 +11,7 @@ import com.podcrash.api.util.ReflectionUtil;
 import me.raindance.champions.inventory.SkillData;
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
-import me.raindance.champions.kits.skills.warden.Adrenaline;
+import me.raindance.champions.kits.skills.warden.Fortitude;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -48,7 +48,7 @@ public final class SkillInfo {
     }
     private static void addSkills(String skillTypeName) throws IOException, ClassNotFoundException {
         String path = "me.raindance.champions.kits.skills." + skillTypeName;
-        ClassPath cp = ClassPath.from(Adrenaline.class.getClassLoader());
+        ClassPath cp = ClassPath.from(Fortitude.class.getClassLoader());
         Set<ClassPath.ClassInfo> classInfoSet = cp.getTopLevelClasses(path);
         StringBuilder skillsLoaded = new StringBuilder(skillTypeName + ": ");
 

@@ -2,39 +2,52 @@ package me.raindance.champions.kits.skills.vanguard;
 
 import com.packetwrapper.abstractpackets.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.podcrash.api.damage.DamageApplier;
 import com.podcrash.api.util.VectorUtil;
 import me.raindance.champions.Main;
 import com.podcrash.api.effect.particle.ParticleGenerator;
+
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
 import com.podcrash.api.kits.enums.ItemType;
 import me.raindance.champions.kits.SkillType;
 import com.podcrash.api.kits.iskilltypes.action.IConstruct;
-import com.podcrash.api.kits.iskilltypes.action.ICooldown;
-import com.podcrash.api.kits.skilltypes.Instant;
+import com.podcrash.api.kits.skilltypes.ChargeUp;
+import com.podcrash.api.sound.SoundPlayer;
 import com.podcrash.api.time.resources.TimeResource;
 import com.podcrash.api.util.PacketUtil;
+import com.podcrash.api.util.SkillTitleSender;
+import com.podcrash.api.util.TitleSender;
+
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.util.Vector;
 
-@SkillMetadata(id = 809, skillType = SkillType.Vanguard, invType = InvType.AXE)
-public class Whirlwind extends Instant implements ICooldown, IConstruct {
+@SkillMetadata(id = 809, skillType = SkillType.Vanguard, invType = InvType.SWORD)
+public class Whirlwind extends ChargeUp implements IConstruct {
     private int distance;
     private int distanceSquared;
     private int maxDamage;
     private float multiplier;
     private final static double[][] pleaseLoad = new double[60][2];
+    
+    public Whirlwind() {
+        this.distance = 10;
+        this.distanceSquared = distance * distance;
+        this.maxDamage = 9;
+        this.multiplier = 2.7F;
+    }
+
 
     @Override
     public float getCooldown() {
-        return 10;
+        return 14;
     }
 
     @Override
@@ -44,14 +57,43 @@ public class Whirlwind extends Instant implements ICooldown, IConstruct {
 
     @Override
     public ItemType getItemType() {
-        return ItemType.AXE;
+        return ItemType.SWORD;
     }
 
-    public Whirlwind() {
-        this.distance = 7;
-        this.distanceSquared = distance * distance;
-        this.maxDamage = 5;
-        this.multiplier = 2.7F;
+    @Override
+    public float getRate() {
+        return 1f / 20f;
+    }
+
+    @Override
+    public void task() {
+        charge();
+        isUsing = true;
+        WrappedChatComponent progress = SkillTitleSender.chargeUpProgressBar(this, this.getCharge());
+        if(getCharge() < 1f) SoundPlayer.sendSound(this.getPlayer(), "note.harp", 0.75f, (int)(130 * getCharge()) );
+
+        Random rand = new Random();
+        WrapperPlayServerWorldParticles particle = ParticleGenerator.createParticle(getPlayer().getLocation().toVector(),
+                EnumWrappers.Particle.FIREWORKS_SPARK, 5,
+                rand.nextFloat() / 2f, 0.25f + (rand.nextFloat() - 0.15f), rand.nextFloat() / 2f);
+        getPlayer().getWorld().getPlayers().forEach(player -> ParticleGenerator.generate(player, particle));
+
+        TitleSender.sendTitle(this.getPlayer(), progress);
+    }
+
+    public void release() {
+        Location center = getPlayer().getLocation();
+
+        spiral(center);
+        for(Player player : getPlayers()) {
+            if (player == getPlayer() || isAlly(player)) continue;
+
+            double diff = center.distanceSquared(player.getLocation());
+            double pullDistance = Math.max(16, (distance * getCharge()) * (distance * getCharge()));
+            if (diff > pullDistance) continue;
+
+            whirlwind(player, diff);
+        }
     }
 
     @Override
@@ -108,26 +150,26 @@ public class Whirlwind extends Instant implements ICooldown, IConstruct {
 
     }
 
-    @Override
-    protected void doSkill(PlayerEvent event, Action action) {
-        if(!rightClickCheck(action)) return;
-        if(onCooldown()) return;
+    // @Override
+    // protected void doSkill(PlayerEvent event, Action action) {
+    //     if(!rightClickCheck(action)) return;
+    //     if(onCooldown()) return;
 
-        Location center = getPlayer().getLocation();
-        setLastUsed(System.currentTimeMillis());
+    //     Location center = getPlayer().getLocation();
+    //     setLastUsed(System.currentTimeMillis());
 
-        spiral(center);
-        for(Player player : getPlayers()) {
-            if (player == getPlayer() || isAlly(player)) continue;
+    //     spiral(center);
+    //     for(Player player : getPlayers()) {
+    //         if (player == getPlayer() || isAlly(player)) continue;
 
-            double diff = center.distanceSquared(player.getLocation());
-            if (diff > distanceSquared) continue;
+    //         double diff = center.distanceSquared(player.getLocation());
+    //         if (diff > distanceSquared) continue;
 
-            whirlwind(player, diff);
-        }
+    //         whirlwind(player, diff);
+    //     }
 
-        getPlayer().sendMessage(getUsedMessage());
-    }
+    //     getPlayer().sendMessage(getUsedMessage());
+    // }
 
     private void whirlwind(LivingEntity player, double dist) {
         Vector toCenter = VectorUtil.fromAtoB(player.getLocation(), getPlayer().getLocation()).normalize();
@@ -136,6 +178,6 @@ public class Whirlwind extends Instant implements ICooldown, IConstruct {
         toCenter.multiply(percentage * 1.25).setY(0.24D);
 
         player.setVelocity(toCenter);
-        DamageApplier.damage(player, getPlayer(), maxDamage, this, false);
+        DamageApplier.damage(player, getPlayer(), Math.max(maxDamage * getCharge(), 3), this, false);
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class Vanguard extends ChampionsPlayer {
 
     public Vanguard(Player player, List<Skill> skills) {
-        super(player, 65);
+        super(player, 60);
         this.skills = new HashSet<>(skills);
         setSound(new SoundWrapper("mob.blaze.hit", 0.95F, 57));
         this.armor = new Material[]{Material.DIAMOND_BOOTS, Material.DIAMOND_LEGGINGS, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_HELMET};

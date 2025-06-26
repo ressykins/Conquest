@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 
 @SkillMetadata(id = 305, skillType = SkillType.Duelist, invType = InvType.DROP)
 public class Lunge extends Drop implements ICooldown {
-    private float cooldown = 8F;
+    private float cooldown = 6F;
     @Override
     public String getName() {
         return "Lunge";
@@ -38,7 +38,16 @@ public class Lunge extends Drop implements ICooldown {
             getPlayer().sendMessage(getCannotUseWhileMessage("Slowed"));
             return false;
         }
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.GROUND)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Grounded"));
+            return false;
+        }
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.ROOTED)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Rooted"));
+            return false;
+        }
         setLastUsed(System.currentTimeMillis());
+        getPlayer().sendMessage(getUsedMessage());
         SoundPlayer.sendSound(getPlayer().getLocation(), "item.fireCharge.use", 0.8F, 90);
         setVector();
         return true;

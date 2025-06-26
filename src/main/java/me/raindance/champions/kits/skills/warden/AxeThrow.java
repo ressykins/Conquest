@@ -16,22 +16,24 @@ import com.podcrash.api.kits.enums.ItemType;
 import com.podcrash.api.kits.iskilltypes.action.IConstruct;
 import com.podcrash.api.kits.iskilltypes.action.ICooldown;
 import com.podcrash.api.kits.skilltypes.Instant;
+import me.raindance.champions.annotation.kits.SkillMetadata;
+import me.raindance.champions.kits.SkillType;
+import me.raindance.champions.kits.enums.InvType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-//@SkillMetadata(id = 909, skillType = SkillType.Warden, invType = InvType.AXE)
-public class AxeThrow extends Instant implements IConstruct, ICooldown, Listener {
+@SkillMetadata(id = 909, skillType = SkillType.Warden, invType = InvType.AXE)
+public class AxeThrow extends Instant implements IConstruct, ICooldown {
 
     private float cooldown = 2f;
-    private float veloScale = 1f;
+    private float veloScale = 1.3f;
     private float damage = 8;
     private float duration = 2;
     private String identifier;

@@ -6,6 +6,8 @@ import com.podcrash.api.effect.particle.ParticleGenerator;
 import com.podcrash.api.effect.status.Status;
 import com.podcrash.api.effect.status.StatusApplier;
 import com.podcrash.api.events.DamageApplyEvent;
+import com.podcrash.api.events.DeathApplyEvent;
+
 import me.raindance.champions.annotation.kits.SkillMetadata;
 import me.raindance.champions.kits.enums.InvType;
 import com.podcrash.api.kits.enums.ItemType;
@@ -16,7 +18,6 @@ import com.podcrash.api.kits.skilltypes.Instant;
 import com.podcrash.api.time.TimeHandler;
 import com.podcrash.api.util.PacketUtil;
 import com.podcrash.api.world.BlockUtil;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ import org.bukkit.util.Vector;
 @SkillMetadata(id = 605, skillType = SkillType.Rogue, invType = InvType.AXE)
 public class Flash extends Instant implements ICharge, IPassiveTimer {
     //rate of charges still not implemented
-    private final int MAX_CHARGES = 4;
+    private final int MAX_CHARGES = 5;
     private int delay = 1;
     private int charges = MAX_CHARGES;
     private long lastTimeHit = 0;
@@ -45,8 +46,17 @@ public class Flash extends Instant implements ICharge, IPassiveTimer {
             return;
         }
 
-        if(StatusApplier.getOrNew(e.getPlayer()).has(Status.SLOW)) {
-            getPlayer().sendMessage(String.format("%sFlash> %sYou cannot use %s%s%s due to %s", ChatColor.BLUE, ChatColor.GRAY, ChatColor.YELLOW, getName(), ChatColor.GRAY, Status.SLOW));
+        if (!rightClickCheck(action)) return;
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.SLOW)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Slowed"));
+            return;
+        }
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.GROUND)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Grounded"));
+            return;
+        }
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.ROOTED)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Rooted"));
             return;
         }
         double distance = 34D;
@@ -103,7 +113,7 @@ public class Flash extends Instant implements ICharge, IPassiveTimer {
 
     public void addCharge() {
         if(System.currentTimeMillis() - lastTimeHit <= delay * 1000L) return;
-        if (getCurrentCharges() < MAX_CHARGES && System.currentTimeMillis() - getLastUsed() >= 3000L) {
+        if (getCurrentCharges() < MAX_CHARGES && System.currentTimeMillis() - getLastUsed() >= 5000L) {
             charges++;
             this.getPlayer().sendMessage(getCurrentChargeMessage());
             setLastUsed(System.currentTimeMillis());
@@ -126,5 +136,11 @@ public class Flash extends Instant implements ICharge, IPassiveTimer {
     @Override
     public ItemType getItemType() {
         return ItemType.AXE;
+    }
+
+    @EventHandler
+    public void kill(DeathApplyEvent event) {
+        if(event.getAttacker() != getPlayer()) return;
+        addCharge();
     }
 }

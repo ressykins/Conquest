@@ -24,7 +24,7 @@ import org.bukkit.util.Vector;
 
 @SkillMetadata(id = 705, skillType = SkillType.Thief, invType = InvType.AXE)
 public class Leap extends Instant implements ICooldown {
-    private boolean isLeap;
+    // private boolean isLeap;
     public Leap() {
         setCanUseWhileCooldown(true);
     }
@@ -47,8 +47,16 @@ public class Leap extends Instant implements ICooldown {
     @Override
     protected void doSkill(PlayerEvent event, Action action) {
         if (!rightClickCheck(action)) return;
-        if(StatusApplier.getOrNew(getPlayer()).has(Status.SLOW)) {
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.SLOW)) {
             getPlayer().sendMessage(getCannotUseWhileMessage("Slowed"));
+            return;
+        }
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.GROUND)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Grounded"));
+            return;
+        }
+        if (StatusApplier.getOrNew(getPlayer()).has(Status.ROOTED)) {
+            getPlayer().sendMessage(getCannotUseWhileMessage("Rooted"));
             return;
         }
         //idk the proper value
@@ -82,7 +90,7 @@ public class Leap extends Instant implements ICooldown {
         if(EntityUtil.onGround(player)) v.setY(v.getY() + 0.2);
         player.setVelocity(v);
         player.setFallDistance(-3);
-        this.isLeap = false;
+        // this.isLeap = false;
         getPlayer().sendMessage(String.format("%s%s> %sYou used %sWall Kick%s.",
                 ChatColor.BLUE, getChampionsPlayer().getName(), ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY));
     }
@@ -100,7 +108,7 @@ public class Leap extends Instant implements ICooldown {
         player.setVelocity(v);
         player.setFallDistance(-3);
         this.setLastUsed(System.currentTimeMillis());
-        this.isLeap = true;
+        // this.isLeap = true;
 
         getPlayer().sendMessage(getUsedMessage());
     }
